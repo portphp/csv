@@ -13,9 +13,13 @@ matrix:
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-stable"
         - COVERAGE=true
+        - PHPUNIT_FLAGS="--coverage-clover=coverage.clover"
 
 install:
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
+
+script:
+  - vendor/bin/phpunit ${PHPUNIT_FLAGS}
 
 after_script:
   - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
