@@ -9,7 +9,7 @@ use Port\Writer\AbstractStreamWriter;
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class Writer extends AbstractStreamWriter
+class CsvWriter extends AbstractStreamWriter
 {
     /**
      * @var string
@@ -25,6 +25,7 @@ class Writer extends AbstractStreamWriter
      * @var boolean
      */
     private $utf8Encoding = false;
+
     private $row = 1;
 
     /**
@@ -37,6 +38,7 @@ class Writer extends AbstractStreamWriter
      * @param string   $enclosure The enclosure
      * @param resource $stream
      * @param boolean  $utf8Encoding
+     * @param boolean  $prependHeaderRow
      */
     public function __construct($delimiter = ';', $enclosure = '"', $stream = null, $utf8Encoding = false, $prependHeaderRow = false)
     {
@@ -45,7 +47,6 @@ class Writer extends AbstractStreamWriter
         $this->delimiter = $delimiter;
         $this->enclosure = $enclosure;
         $this->utf8Encoding = $utf8Encoding;
-
         $this->prependHeaderRow = $prependHeaderRow;
     }
 

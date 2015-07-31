@@ -1,15 +1,13 @@
 <?php
 
-namespace Port\Csv\Factory;
-
-use Port\Csv\Reader as CsvReader;
+namespace Port\Csv;
 
 /**
  * Factory that creates CsvReaders
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class ReaderFactory
+class CsvReaderFactory
 {
     /**
      * @var integer
@@ -65,6 +63,7 @@ class ReaderFactory
     public function getReader(\SplFileObject $file)
     {
         $reader = new CsvReader($file, $this->delimiter, $this->enclosure, $this->escape);
+
         if (null !== $this->headerRowNumber) {
             $reader->setHeaderRowNumber($this->headerRowNumber);
         }

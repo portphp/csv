@@ -10,7 +10,7 @@ use Port\Reader\CountableReader;
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class Reader implements CountableReader, \SeekableIterator
+class CsvReader implements CountableReader, \SeekableIterator
 {
     const DUPLICATE_HEADERS_INCREMENT = 1;
     const DUPLICATE_HEADERS_MERGE     = 2;

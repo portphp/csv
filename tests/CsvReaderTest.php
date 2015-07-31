@@ -2,9 +2,9 @@
 
 namespace Port\Tests\Csv;
 
-use Port\Csv\Reader as CsvReader;
+use Port\Csv\CsvReader;
 
-class ReaderTest extends \PHPUnit_Framework_TestCase
+class CsvReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testReadCsvFileWithColumnHeaders()
     {
