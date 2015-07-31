@@ -1,5 +1,5 @@
 {
-    "name": "portphp/csv",
+    "name": "portphp/csv-adapter",
     "description": "CSV reader and writer for Port",
     "license": "MIT",
     "homepage": "https://github.com/portphp",
