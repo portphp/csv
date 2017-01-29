@@ -253,14 +253,6 @@ class CsvReader implements CountableReader, \SeekableIterator
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFields()
-    {
-        return $this->getColumnHeaders();
-    }
-
-    /**
      * Get a row
      *
      * @param integer $number Row number

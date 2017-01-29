@@ -16,7 +16,7 @@ class CsvReaderTest extends \PHPUnit_Framework_TestCase
             array(
                 'id', 'number', 'description'
             ),
-            $csvReader->getFields()
+            array_keys($csvReader->current())
         );
 
         foreach ($csvReader as $row) {
