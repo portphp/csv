@@ -2,12 +2,14 @@
 
 namespace Port\Csv;
 
+use Port\Reader\ReaderFactory;
+
 /**
  * Factory that creates CsvReaders
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class CsvReaderFactory
+class CsvReaderFactory implements ReaderFactory
 {
     /**
      * @var integer
