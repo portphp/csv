@@ -32,7 +32,7 @@ $ git checkout -b bug-or-feature-description
 And install the dependencies:
 
 ```bash
-$ composer install
+$ composer install --prefer-source
 ```
 
 Write your code and add tests. Then run the tests:
