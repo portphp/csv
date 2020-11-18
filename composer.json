@@ -23,6 +23,7 @@
         "docs": "https://portphp.readthedocs.org"
     },
     "require": {
+        "php": "^7.1",
         "portphp/portphp": "^1.2.0|dev-master"
     },
     "autoload": {

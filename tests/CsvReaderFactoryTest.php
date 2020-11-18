@@ -1,6 +1,6 @@
 <?php
 
-namespace Port\Tests;
+namespace Port\Csv\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReaderFactory;

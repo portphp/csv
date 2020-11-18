@@ -1,9 +1,8 @@
 <?php
 
-namespace Port\Tests;
+namespace Port\Csv\Tests;
 
 use Port\Csv\CsvWriter;
-use Port\Tests\Writer\StreamWriterTest;
 
 class CsvWriterTest extends StreamWriterTest
 {

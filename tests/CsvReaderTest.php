@@ -1,9 +1,10 @@
 <?php
 
-namespace Port\Tests;
+namespace Port\Csv\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReader;
+use Port\Exception\DuplicateHeadersException;
 
 class CsvReaderTest extends TestCase
 {
@@ -194,6 +195,7 @@ class CsvReaderTest extends TestCase
      */
     public function testDuplicateHeadersThrowsException()
     {
+        $this->expectException(DuplicateHeadersException::class);
         $reader = $this->getReader('data_column_headers_duplicates.csv');
         $reader->setHeaderRowNumber(0);
     }
