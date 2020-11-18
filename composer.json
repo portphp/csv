@@ -23,7 +23,7 @@
         "docs": "https://portphp.readthedocs.org"
     },
     "require": {
-        "portphp/portphp": "^1.2.0"
+        "portphp/portphp": "^1.2.0|dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -31,8 +31,8 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.0",
-        "phpspec/phpspec": "^2.1"
+        "phpunit/phpunit": "^9.4",
+        "phpspec/phpspec": "^7.0"
     },
     "autoload-dev": {
         "psr-4": {

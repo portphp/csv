@@ -3,3 +3,6 @@ composer.phar
 composer.lock
 phpspec.yml
 phpunit.xml
+composer.lock
+.idea
+.phpunit.result.cache

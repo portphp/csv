@@ -1,6 +1,6 @@
 <?php
 
-namespace Port\Tests\Csv;
+namespace Port\Tests;
 
 use Port\Csv\CsvWriter;
 use Port\Tests\Writer\StreamWriterTest;

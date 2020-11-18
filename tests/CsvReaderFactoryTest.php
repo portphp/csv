@@ -1,10 +1,11 @@
 <?php
 
-namespace Port\Tests\Csv\Factory;
+namespace Port\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReaderFactory;
 
-class CsvReaderFactoryTest extends \PHPUnit_Framework_TestCase
+class CsvReaderFactoryTest extends TestCase
 {
     public function testGetReader()
     {

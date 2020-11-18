@@ -1,10 +1,11 @@
 <?php
 
-namespace Port\Tests\Csv;
+namespace Port\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReader;
 
-class CsvReaderTest extends \PHPUnit_Framework_TestCase
+class CsvReaderTest extends TestCase
 {
     public function testReadCsvFileWithColumnHeaders()
     {
