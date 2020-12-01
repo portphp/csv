@@ -331,6 +331,7 @@ class CsvReader implements CountableReader, SeekableIterator
         $diff = array_diff_assoc($headers, array_unique($headers));
         if (count($diff) > 0) {
             switch ($this->duplicateHeadersFlag) {
+                /** @noinspection PhpMissingBreakStatementInspection */
                 case self::DUPLICATE_HEADERS_INCREMENT:
                     $headers = $this->incrementHeaders($headers);
                     // Fall through
