@@ -3,6 +3,7 @@
 namespace Port\Csv;
 
 use Port\Reader\ReaderFactory;
+use SplFileObject;
 
 /**
  * Factory that creates CsvReaders
@@ -58,11 +59,11 @@ class CsvReaderFactory implements ReaderFactory
     }
 
     /**
-     * @param \SplFileObject $file
+     * @param SplFileObject $file
      *
      * @return CsvReader
      */
-    public function getReader(\SplFileObject $file)
+    public function getReader(SplFileObject $file)
     {
         $reader = new CsvReader($file, $this->delimiter, $this->enclosure, $this->escape);
 

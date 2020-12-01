@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReader;
 use Port\Exception\DuplicateHeadersException;
 use SplFileObject;
+use SplTempFileObject;
 
 class CsvReaderTest extends TestCase
 {
@@ -193,7 +194,7 @@ class CsvReaderTest extends TestCase
 
     public function testDuplicateHeadersThrowsException()
     {
-        $this->expectException(\Port\Exception\DuplicateHeadersException::class);// description
+        $this->expectException(DuplicateHeadersException::class);// description
         $this->expectException(DuplicateHeadersException::class);
         $reader = $this->getReader('data_column_headers_duplicates.csv');
         $reader->setHeaderRowNumber(0);
@@ -271,7 +272,7 @@ class CsvReaderTest extends TestCase
 
         ini_set('xdebug.max_nesting_level', 200);
 
-        $file = new \SplTempFileObject();
+        $file = new SplTempFileObject();
         for($i = 0; $i < 500; $i++) {
             $file->fwrite("1,2,3\n");
         }
