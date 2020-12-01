@@ -108,12 +108,12 @@ class CsvReader implements CountableReader, \SeekableIterator
     {
         // If the CSV has no column headers just return the line
         if (empty($this->columnHeaders)) {
-            return $this->file->current();
+            return $this->getCurrentLine();
         }
 
         // Since the CSV has column headers use them to construct an associative array for the columns in this line
         do {
-            $line = $this->file->current();
+            $line = $this->getCurrentLine();
 
             // In non-strict mode pad/slice the line to match the column headers
             if (!$this->isStrict()) {
@@ -323,7 +323,7 @@ class CsvReader implements CountableReader, \SeekableIterator
     protected function readHeaderRow($rowNumber)
     {
         $this->file->seek($rowNumber);
-        $headers = $this->file->current();
+        $headers = $this->getCurrentLine();
 
         // Test for duplicate column headers
         $diff = array_diff_assoc($headers, array_unique($headers));
@@ -403,5 +403,25 @@ class CsvReader implements CountableReader, \SeekableIterator
         }
 
         return $values;
+    }
+
+    /**
+     * Returns the current line from the file pointer.
+     * If found the BOM is removed
+     *
+     * @return array|false|string
+     */
+    protected function getCurrentLine()
+    {
+        $key = $this->file->key();
+        $line = $this->file->current();
+
+        //remove the BOM from the first line
+        if ($key === 0 && array_key_exists(0, $line)) {
+            $bom = pack('H*', 'EFBBBF');
+            $line[0] = preg_replace("/^$bom/", '', $line[0]);
+        }
+
+        return $line;
     }
 }

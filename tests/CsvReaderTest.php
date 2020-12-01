@@ -5,12 +5,13 @@ namespace Port\Csv\Tests;
 use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReader;
 use Port\Exception\DuplicateHeadersException;
+use SplFileObject;
 
 class CsvReaderTest extends TestCase
 {
     public function testReadCsvFileWithColumnHeaders()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setHeaderRowNumber(0);
 
@@ -39,7 +40,7 @@ class CsvReaderTest extends TestCase
 
     public function testReadCsvFileWithoutColumnHeaders()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
         $csvReader = new CsvReader($file);
 
         $this->assertEmpty($csvReader->getColumnHeaders());
@@ -47,7 +48,7 @@ class CsvReaderTest extends TestCase
 
     public function testReadCsvFileWithManualColumnHeaders()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setColumnHeaders(array('id', 'number', 'description'));
 
@@ -60,7 +61,7 @@ class CsvReaderTest extends TestCase
 
     public function testReadCsvFileWithTrailingBlankLines()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_blank_lines.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_blank_lines.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setColumnHeaders(array('id', 'number', 'description'));
 
@@ -73,14 +74,14 @@ class CsvReaderTest extends TestCase
 
     public function testCountWithoutHeaders()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_no_column_headers.csv');
         $csvReader = new CsvReader($file);
         $this->assertEquals(3, $csvReader->count());
     }
 
     public function testCountWithHeaders()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setHeaderRowNumber(0);
         $this->assertEquals(3, $csvReader->count(), 'Row count should not include header');
@@ -88,7 +89,7 @@ class CsvReaderTest extends TestCase
 
     public function testCountWithFewerElementsThanColumnHeadersNotStrict()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_fewer_elements_than_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_fewer_elements_than_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setStrict(false);
         $csvReader->setHeaderRowNumber(0);
@@ -98,7 +99,7 @@ class CsvReaderTest extends TestCase
 
     public function testCountWithMoreElementsThanColumnHeadersNotStrict()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_more_elements_than_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_more_elements_than_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setStrict(false);
         $csvReader->setHeaderRowNumber(0);
@@ -110,7 +111,7 @@ class CsvReaderTest extends TestCase
 
     public function testCountDoesNotMoveFilePointer()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_column_headers.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setHeaderRowNumber(0);
 
@@ -123,7 +124,7 @@ class CsvReaderTest extends TestCase
 
     public function testVaryingElementCountWithColumnHeadersNotStrict()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_column_headers_varying_element_count.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_column_headers_varying_element_count.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setStrict(false);
         $csvReader->setHeaderRowNumber(0);
@@ -134,7 +135,7 @@ class CsvReaderTest extends TestCase
 
     public function testVaryingElementCountWithoutColumnHeadersNotStrict()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_no_column_headers_varying_element_count.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_no_column_headers_varying_element_count.csv');
         $csvReader = new CsvReader($file);
         $csvReader->setStrict(false);
         $csvReader->setColumnHeaders(array('id', 'number', 'description'));
@@ -145,7 +146,7 @@ class CsvReaderTest extends TestCase
 
     public function testInvalidCsv()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_column_headers_varying_element_count.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_column_headers_varying_element_count.csv');
         $reader = new CsvReader($file);
         $reader->setHeaderRowNumber(0);
 
@@ -164,7 +165,7 @@ class CsvReaderTest extends TestCase
 
     public function testLastRowInvalidCsv()
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/data_no_column_headers_varying_element_count.csv');
+        $file = new SplFileObject(__DIR__.'/fixtures/data_no_column_headers_varying_element_count.csv');
         $reader = new CsvReader($file);
         $reader->setColumnHeaders(array('id', 'number', 'description'));
 
@@ -190,11 +191,9 @@ class CsvReaderTest extends TestCase
         $this->assertCount(3, $reader);
     }
 
-    /**
-     * @expectedException \Port\Exception\DuplicateHeadersException description
-     */
     public function testDuplicateHeadersThrowsException()
     {
+        $this->expectException(\Port\Exception\DuplicateHeadersException::class);// description
         $this->expectException(DuplicateHeadersException::class);
         $reader = $this->getReader('data_column_headers_duplicates.csv');
         $reader->setHeaderRowNumber(0);
@@ -225,6 +224,21 @@ class CsvReaderTest extends TestCase
             $current
         );
     }
+
+    public function testCSVWithBOM()
+    {
+        $reader = $this->getReader('data_with_bom.csv');
+        $reader->setHeaderRowNumber(0);
+        $this->assertSame(['id', 'number', 'description'], $reader->getColumnHeaders());
+    }
+
+    public function testCSVWithoutBOM()
+    {
+        $reader = $this->getReader('data_without_bom.csv');
+        $reader->setHeaderRowNumber(0);
+        $this->assertSame(['id', 'number', 'description'], $reader->getColumnHeaders());
+    }
+
 
     public function testDuplicateHeadersMerge()
     {
@@ -277,7 +291,7 @@ class CsvReaderTest extends TestCase
 
     protected function getReader($filename)
     {
-        $file = new \SplFileObject(__DIR__.'/fixtures/'.$filename);
+        $file = new SplFileObject(__DIR__.'/fixtures/'.$filename);
 
         return new CsvReader($file);
     }
