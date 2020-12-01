@@ -4,13 +4,15 @@ namespace Port\Csv;
 
 use Port\Exception\DuplicateHeadersException;
 use Port\Reader\CountableReader;
+use SeekableIterator;
+use SplFileObject;
 
 /**
  * Reads a CSV file, using as little memory as possible
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class CsvReader implements CountableReader, \SeekableIterator
+class CsvReader implements CountableReader, SeekableIterator
 {
     const DUPLICATE_HEADERS_INCREMENT = 1;
     const DUPLICATE_HEADERS_MERGE     = 2;
@@ -25,7 +27,7 @@ class CsvReader implements CountableReader, \SeekableIterator
     /**
      * CSV file
      *
-     * @var \SplFileObject
+     * @var SplFileObject
      */
     protected $file;
 
@@ -74,21 +76,21 @@ class CsvReader implements CountableReader, \SeekableIterator
     protected $duplicateHeadersFlag;
 
     /**
-     * @param \SplFileObject $file
+     * @param SplFileObject $file
      * @param string         $delimiter
      * @param string         $enclosure
      * @param string         $escape
      */
-    public function __construct(\SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct(SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
         ini_set('auto_detect_line_endings', true);
 
         $this->file = $file;
         $this->file->setFlags(
-            \SplFileObject::READ_CSV |
-            \SplFileObject::SKIP_EMPTY |
-            \SplFileObject::READ_AHEAD |
-            \SplFileObject::DROP_NEW_LINE
+            SplFileObject::READ_CSV |
+            SplFileObject::SKIP_EMPTY |
+            SplFileObject::READ_AHEAD |
+            SplFileObject::DROP_NEW_LINE
         );
         $this->file->setCsvControl(
             $delimiter,

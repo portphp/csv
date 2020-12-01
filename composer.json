@@ -27,7 +27,7 @@
         "portphp/portphp": "^2.0.0|dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4",
+        "phpunit/phpunit": "^9.2",
         "phpspec/phpspec": "^7.0"
     },
     "autoload": {
