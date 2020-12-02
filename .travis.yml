@@ -22,6 +22,9 @@ matrix:
 install:
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
 
+before_script:
+  - export XDEBUG_MODE=coverage
+
 script:
   - vendor/bin/phpunit ${PHPUNIT_FLAGS}
 
