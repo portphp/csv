@@ -24,7 +24,7 @@
     },
     "require": {
         "php": ">=7.3",
-        "portphp/portphp": "^2.0.0|dev-master"
+        "portphp/portphp": "^2.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.2.0",
