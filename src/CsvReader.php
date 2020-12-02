@@ -4,13 +4,15 @@ namespace Port\Csv;
 
 use Port\Exception\DuplicateHeadersException;
 use Port\Reader\CountableReader;
+use SeekableIterator;
+use SplFileObject;
 
 /**
  * Reads a CSV file, using as little memory as possible
  *
  * @author David de Boer <david@ddeboer.nl>
  */
-class CsvReader implements CountableReader, \SeekableIterator
+class CsvReader implements CountableReader, SeekableIterator
 {
     const DUPLICATE_HEADERS_INCREMENT = 1;
     const DUPLICATE_HEADERS_MERGE     = 2;
@@ -25,7 +27,7 @@ class CsvReader implements CountableReader, \SeekableIterator
     /**
      * CSV file
      *
-     * @var \SplFileObject
+     * @var SplFileObject
      */
     protected $file;
 
@@ -74,21 +76,21 @@ class CsvReader implements CountableReader, \SeekableIterator
     protected $duplicateHeadersFlag;
 
     /**
-     * @param \SplFileObject $file
+     * @param SplFileObject $file
      * @param string         $delimiter
      * @param string         $enclosure
      * @param string         $escape
      */
-    public function __construct(\SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function __construct(SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
         ini_set('auto_detect_line_endings', true);
 
         $this->file = $file;
         $this->file->setFlags(
-            \SplFileObject::READ_CSV |
-            \SplFileObject::SKIP_EMPTY |
-            \SplFileObject::READ_AHEAD |
-            \SplFileObject::DROP_NEW_LINE
+            SplFileObject::READ_CSV |
+            SplFileObject::SKIP_EMPTY |
+            SplFileObject::READ_AHEAD |
+            SplFileObject::DROP_NEW_LINE
         );
         $this->file->setCsvControl(
             $delimiter,
@@ -108,12 +110,12 @@ class CsvReader implements CountableReader, \SeekableIterator
     {
         // If the CSV has no column headers just return the line
         if (empty($this->columnHeaders)) {
-            return $this->file->current();
+            return $this->getCurrentLine();
         }
 
         // Since the CSV has column headers use them to construct an associative array for the columns in this line
         do {
-            $line = $this->file->current();
+            $line = $this->getCurrentLine();
 
             // In non-strict mode pad/slice the line to match the column headers
             if (!$this->isStrict()) {
@@ -323,12 +325,13 @@ class CsvReader implements CountableReader, \SeekableIterator
     protected function readHeaderRow($rowNumber)
     {
         $this->file->seek($rowNumber);
-        $headers = $this->file->current();
+        $headers = $this->getCurrentLine();
 
         // Test for duplicate column headers
         $diff = array_diff_assoc($headers, array_unique($headers));
         if (count($diff) > 0) {
             switch ($this->duplicateHeadersFlag) {
+                /** @noinspection PhpMissingBreakStatementInspection */
                 case self::DUPLICATE_HEADERS_INCREMENT:
                     $headers = $this->incrementHeaders($headers);
                     // Fall through
@@ -403,5 +406,25 @@ class CsvReader implements CountableReader, \SeekableIterator
         }
 
         return $values;
+    }
+
+    /**
+     * Returns the current line from the file pointer.
+     * If found the BOM is removed
+     *
+     * @return array|false|string
+     */
+    protected function getCurrentLine()
+    {
+        $key = $this->file->key();
+        $line = $this->file->current();
+
+        //remove the BOM from the first line
+        if ($key === 0 && array_key_exists(0, $line)) {
+            $bom = pack('H*', 'EFBBBF');
+            $line[0] = preg_replace("/^$bom/", '', $line[0]);
+        }
+
+        return $line;
     }
 }
