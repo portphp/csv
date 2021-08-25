@@ -200,7 +200,9 @@ class CsvReader implements CountableReader, \SeekableIterator
     {
         $this->file->rewind();
         if (null !== $this->headerRowNumber) {
-            $this->file->seek($this->headerRowNumber + 1);
+            for ($i = 0; $i <= $this->headerRowNumber; $i++) {
+                $this->file->next();
+            }
         }
     }
 
