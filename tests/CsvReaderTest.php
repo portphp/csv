@@ -2,9 +2,10 @@
 
 namespace Port\Tests\Csv;
 
+use PHPUnit\Framework\TestCase;
 use Port\Csv\CsvReader;
 
-class CsvReaderTest extends \PHPUnit_Framework_TestCase
+class CsvReaderTest extends TestCase
 {
     public function testReadCsvFileWithColumnHeaders()
     {
@@ -182,17 +183,9 @@ class CsvReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('strictly invalid'), current($errors));
     }
 
-    public function testLineBreaks()
-    {
-        $reader = $this->getReader('data_cr_breaks.csv');
-        $this->assertCount(3, $reader);
-    }
-
-    /**
-     * @expectedException \Port\Exception\DuplicateHeadersException description
-     */
     public function testDuplicateHeadersThrowsException()
     {
+        $this->expectException(\Port\Exception\DuplicateHeadersException::class);
         $reader = $this->getReader('data_column_headers_duplicates.csv');
         $reader->setHeaderRowNumber(0);
     }
