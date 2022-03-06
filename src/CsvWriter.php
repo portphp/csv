@@ -14,12 +14,12 @@ class CsvWriter extends AbstractStreamWriter
     /**
      * @var string
      */
-    private $delimiter = ';';
+    private $delimiter;
 
     /**
      * @var string
      */
-    private $enclosure = '"';
+    private $enclosure;
 
     /**
      * @var boolean
@@ -40,7 +40,7 @@ class CsvWriter extends AbstractStreamWriter
      * @param boolean  $utf8Encoding
      * @param boolean  $prependHeaderRow
      */
-    public function __construct($delimiter = ';', $enclosure = '"', $stream = null, $utf8Encoding = false, $prependHeaderRow = false)
+    public function __construct($delimiter = ',', $enclosure = '"', $stream = null, $utf8Encoding = false, $prependHeaderRow = false)
     {
         parent::__construct($stream);
 
