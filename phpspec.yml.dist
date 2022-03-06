@@ -1,5 +1,0 @@
-suites:
-  library_suite:
-    namespace: Port\Csv
-    psr4_prefix: Port\Csv
-formatter.name: pretty

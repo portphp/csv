@@ -81,8 +81,6 @@ class CsvReader implements CountableReader, \SeekableIterator
      */
     public function __construct(\SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
-        ini_set('auto_detect_line_endings', true);
-
         $this->file = $file;
         $this->file->setFlags(
             \SplFileObject::READ_CSV |
@@ -101,10 +99,8 @@ class CsvReader implements CountableReader, \SeekableIterator
      * Return the current row as an array
      *
      * If a header row has been set, an associative array will be returned
-     *
-     * @return array
      */
-    public function current()
+    public function current(): ?array
     {
         // If the CSV has no column headers just return the line
         if (empty($this->columnHeaders)) {
@@ -196,7 +192,7 @@ class CsvReader implements CountableReader, \SeekableIterator
      * row. That way, when you iterate over the rows, that header row is
      * skipped.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->file->rewind();
         if (null !== $this->headerRowNumber) {
@@ -204,10 +200,7 @@ class CsvReader implements CountableReader, \SeekableIterator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
+    public function count(): int
     {
         if (null === $this->count) {
             $position = $this->key();
@@ -220,34 +213,22 @@ class CsvReader implements CountableReader, \SeekableIterator
         return $this->count;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
+    public function next(): void
     {
         $this->file->next();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
+    public function valid(): bool
     {
         return $this->file->valid();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
+    public function key(): int
     {
         return $this->file->key();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function seek($pointer)
+    public function seek($pointer): void
     {
         $this->file->seek($pointer);
     }

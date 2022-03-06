@@ -3,7 +3,7 @@
 namespace Port\Tests\Csv;
 
 use Port\Csv\CsvWriter;
-use Port\Tests\Writer\StreamWriterTest;
+use Port\Test\StreamWriterTest;
 
 class CsvWriterTest extends StreamWriterTest
 {
