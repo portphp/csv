@@ -108,7 +108,7 @@ class CsvReader implements CountableReader, \SeekableIterator
         }
 
         // Since the CSV has column headers use them to construct an associative array for the columns in this line
-        do {
+        while($this->valid()) {
             $line = $this->file->current();
 
             // In non-strict mode pad/slice the line to match the column headers
@@ -135,7 +135,7 @@ class CsvReader implements CountableReader, \SeekableIterator
                 $this->errors[$this->key()] = $line;
                 $this->next();
             }
-        } while($this->valid());
+        }
 
         return null;
     }
