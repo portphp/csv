@@ -29,12 +29,12 @@ jobs:
           tools: composer:v2
 
 
-      - name: Validate composer.json
+      - name: Validate Composer metadata
         run: |
           if [ -f composer.lock ]; then
-            composer validate --strict
+            composer validate --strict --no-interaction
           else
-            composer validate --strict --no-check-lock
+            composer validate --strict --no-check-lock --no-interaction
           fi
 
       - name: Cache Composer packages
@@ -48,9 +48,9 @@ jobs:
       - name: Install dependencies
         run: |
           if [ -f composer.lock ]; then
-            composer install --prefer-dist --no-progress
+            composer install --prefer-dist --no-progress --no-interaction
           else
-            composer update --prefer-dist --no-progress
+            composer update --prefer-dist --no-progress --no-interaction
           fi
 
       - name: Run test suite
