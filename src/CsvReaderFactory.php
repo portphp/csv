@@ -2,6 +2,7 @@
 
 namespace Port\Csv;
 
+use Port\Reader;
 use Port\Reader\ReaderFactory;
 
 /**
@@ -62,7 +63,7 @@ class CsvReaderFactory implements ReaderFactory
      *
      * @return CsvReader
      */
-    public function getReader(\SplFileObject $file)
+    public function getReader(\SplFileObject $file): Reader
     {
         $reader = new CsvReader($file, $this->delimiter, $this->enclosure, $this->escape);
 

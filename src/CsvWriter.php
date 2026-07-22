@@ -53,7 +53,7 @@ class CsvWriter extends AbstractStreamWriter
     /**
      * {@inheritdoc}
      */
-    public function prepare()
+    public function prepare(): void
     {
         if ($this->utf8Encoding) {
             fprintf($this->getStream(), chr(0xEF) . chr(0xBB) . chr(0xBF));
@@ -63,7 +63,7 @@ class CsvWriter extends AbstractStreamWriter
     /**
      * {@inheritdoc}
      */
-    public function writeItem(array $item)
+    public function writeItem(array $item): void
     {
         if ($this->prependHeaderRow && 1 == $this->row++) {
             $headers = array_keys($item);
