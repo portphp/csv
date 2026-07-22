@@ -30,13 +30,18 @@ jobs:
 
 
       - name: Validate composer.json
-        run: composer validate --strict --no-check-lock
+        run: |
+          if [ -f composer.lock ]; then
+            composer validate --strict
+          else
+            composer validate --strict --no-check-lock
+          fi
 
       - name: Cache Composer packages
         uses: actions/cache@v4
         with:
           path: vendor
-          key: ${{ runner.os }}-composer-${{ matrix.php-versions }}-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ matrix.php-versions }}-${{ hashFiles('**/composer.json', '**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-${{ matrix.php-versions }}-
 
