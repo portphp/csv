@@ -1,7 +1,7 @@
 # portphp/csv
 
 [![Latest Version](https://img.shields.io/github/release/portphp/csv.svg?style=flat-square)](https://github.com/portphp/csv/releases)
-[![CI](https://github.com/portphp/csv/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/portphp/csv/actions)
+[![CI](https://github.com/portphp/csv/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/portphp/csv/actions/workflows/test.yml)
 [![PHP Version](https://img.shields.io/packagist/php-v/portphp/csv.svg?style=flat-square)](https://packagist.org/packages/portphp/csv)
 
 **Requirements:** PHP ^8.2 (tested on 8.2–8.5).
