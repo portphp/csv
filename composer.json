@@ -23,7 +23,7 @@
         "docs": "https://portphp.readthedocs.org"
     },
     "require": {
-        "php": ">=8.2",
+        "php": "^8.2",
         "portphp/portphp": "^1.6.0"
     },
     "autoload": {
