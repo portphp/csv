@@ -20,7 +20,7 @@
     "support": {
         "issues": "https://github.com/portphp/portphp/issues",
         "source": "https://github.com/portphp/csv",
-        "docs": "https://portphp.readthedocs.org"
+        "docs": "https://portphp.readthedocs.io"
     },
     "require": {
         "php": "^8.2",
