@@ -29,19 +29,29 @@ jobs:
           tools: composer:v2
 
 
-      - name: Validate composer.json
-        run: composer validate --strict --no-check-lock
+      - name: Validate Composer metadata
+        run: |
+          if [ -f composer.lock ]; then
+            composer validate --strict --no-interaction
+          else
+            composer validate --strict --no-check-lock --no-interaction
+          fi
 
       - name: Cache Composer packages
         uses: actions/cache@v4
         with:
           path: vendor
-          key: ${{ runner.os }}-composer-${{ matrix.php-versions }}-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ matrix.php-versions }}-${{ hashFiles('**/composer.json', '**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-${{ matrix.php-versions }}-
 
       - name: Install dependencies
-        run: composer update --prefer-dist --no-progress
+        run: |
+          if [ -f composer.lock ]; then
+            composer install --prefer-dist --no-progress --no-interaction
+          else
+            composer update --prefer-dist --no-progress --no-interaction
+          fi
 
       - name: Run test suite
         run: vendor/bin/phpunit
