@@ -34,13 +34,19 @@ class CsvWriter extends AbstractStreamWriter
     protected $prependHeaderRow;
 
     /**
+     * @var string
+     */
+    private $escape;
+
+    /**
      * @param string   $delimiter The delimiter
      * @param string   $enclosure The enclosure
      * @param resource $stream
      * @param boolean  $utf8Encoding
      * @param boolean  $prependHeaderRow
+     * @param string   $escape The escape character (pass '' for PHP 8.4+ preferred "no escape" behavior)
      */
-    public function __construct($delimiter = ',', $enclosure = '"', $stream = null, $utf8Encoding = false, $prependHeaderRow = false)
+    public function __construct($delimiter = ',', $enclosure = '"', $stream = null, $utf8Encoding = false, $prependHeaderRow = false, string $escape = '\\')
     {
         parent::__construct($stream);
 
@@ -48,6 +54,7 @@ class CsvWriter extends AbstractStreamWriter
         $this->enclosure = $enclosure;
         $this->utf8Encoding = $utf8Encoding;
         $this->prependHeaderRow = $prependHeaderRow;
+        $this->escape = $escape;
     }
 
     /**
@@ -67,9 +74,9 @@ class CsvWriter extends AbstractStreamWriter
     {
         if ($this->prependHeaderRow && 1 == $this->row++) {
             $headers = array_keys($item);
-            fputcsv($this->getStream(), $headers, $this->delimiter, $this->enclosure);
+            fputcsv($this->getStream(), $headers, $this->delimiter, $this->enclosure, $this->escape);
         }
 
-        fputcsv($this->getStream(), $item, $this->delimiter, $this->enclosure);
+        fputcsv($this->getStream(), $item, $this->delimiter, $this->enclosure, $this->escape);
     }
 }
