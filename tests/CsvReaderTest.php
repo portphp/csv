@@ -265,6 +265,97 @@ class CsvReaderTest extends TestCase
         }
     }
 
+    /**
+     * When the iterator is already at EOF, current() must return null rather than
+     * calling count() on SplFileObject's false (do-while entered once while invalid).
+     *
+     * @see https://github.com/portphp/csv/pull/3
+     */
+    public function testCurrentAtEndOfFileWithHeadersReturnsNull()
+    {
+        $file = new \SplTempFileObject();
+        $file->fwrite("id,name\n1,Alice\n2,Bob\n");
+        $file->rewind();
+
+        $reader = new CsvReader($file);
+        $reader->setHeaderRowNumber(0);
+
+        // Exhaust the iterator
+        iterator_to_array($reader);
+
+        $this->assertFalse($reader->valid());
+        $this->assertNull($reader->current());
+    }
+
+    /**
+     * getRow() past the last line should not TypeError on count(false).
+     *
+     * @see https://github.com/portphp/csv/pull/3
+     */
+    public function testGetRowPastEndWithHeadersReturnsNull()
+    {
+        $file = new \SplTempFileObject();
+        $file->fwrite("id,name\n1,Alice\n");
+        $file->rewind();
+
+        $reader = new CsvReader($file);
+        $reader->setHeaderRowNumber(0);
+
+        $this->assertNull($reader->getRow(99));
+    }
+
+    /**
+     * OneToManyReader calls rightReader->current() after next() past the last
+     * detail row. Without checking valid() first, CsvReader::current() hit
+     * count(false) and broke joins on the last master row.
+     *
+     * This is the real-world failure reported against PR #3.
+     *
+     * @see https://github.com/portphp/csv/pull/3
+     * @see https://github.com/portphp/csv/pull/3#issuecomment-769855101
+     */
+    public function testOneToManyReaderConsumesLastDetailRowWithoutError()
+    {
+        $masterFile = new \SplTempFileObject();
+        $masterFile->fwrite("id,name\n1,Alice\n2,Bob\n");
+        $masterFile->rewind();
+        $masterReader = new CsvReader($masterFile);
+        $masterReader->setHeaderRowNumber(0);
+
+        $detailFile = new \SplTempFileObject();
+        $detailFile->fwrite("id,item\n1,apple\n1,banana\n2,carrot\n");
+        $detailFile->rewind();
+        $detailReader = new CsvReader($detailFile);
+        $detailReader->setHeaderRowNumber(0);
+
+        $reader = new \Port\Reader\OneToManyReader(
+            $masterReader,
+            $detailReader,
+            'items',
+            'id',
+            'id'
+        );
+
+        $rows = iterator_to_array($reader);
+
+        $this->assertCount(2, $rows);
+        $this->assertEquals('Alice', $rows[1]['name']);
+        $this->assertEquals(
+            array(
+                array('id' => '1', 'item' => 'apple'),
+                array('id' => '1', 'item' => 'banana'),
+            ),
+            $rows[1]['items']
+        );
+        $this->assertEquals('Bob', $rows[2]['name']);
+        $this->assertEquals(
+            array(
+                array('id' => '2', 'item' => 'carrot'),
+            ),
+            $rows[2]['items']
+        );
+    }
+
     protected function getReader($filename)
     {
         $file = new \SplFileObject(__DIR__.'/fixtures/'.$filename);

@@ -107,8 +107,11 @@ class CsvReader implements CountableReader, \SeekableIterator
             return $this->file->current();
         }
 
-        // Since the CSV has column headers use them to construct an associative array for the columns in this line
-        do {
+        // Since the CSV has column headers use them to construct an associative array for the columns in this line.
+        // Check valid() before current(): SplFileObject::current() returns false at EOF, and a do-while would
+        // still enter the body once when the iterator is already invalid (e.g. OneToManyReader calls current()
+        // after next() past the last detail row), causing count(false) TypeError on PHP 8+.
+        while ($this->valid()) {
             $line = $this->file->current();
 
             // In non-strict mode pad/slice the line to match the column headers
@@ -135,7 +138,7 @@ class CsvReader implements CountableReader, \SeekableIterator
                 $this->errors[$this->key()] = $line;
                 $this->next();
             }
-        } while($this->valid());
+        }
 
         return null;
     }
